@@ -39,8 +39,8 @@ data$interval <- as.factor(data$interval)
 ```r
 library(ggplot2)
 data2 <- aggregate(steps ~ date, data=data, FUN=sum, na.rm = TRUE)
-g <- ggplot(data2, aes(date, steps))
-g + geom_bar(stat = "identity") + ggtitle("Total Number of Steps Taken Each Day")
+g <- ggplot(data2, aes(steps))
+g + geom_histogram(bins = 10) + ggtitle("Total Number of Steps Taken Each Day")
 ```
 
 ![](PA1_template_files/figure-html/totalsteps-1.png)<!-- -->
@@ -48,24 +48,22 @@ g + geom_bar(stat = "identity") + ggtitle("Total Number of Steps Taken Each Day"
 #### 2.2a Mean number of steps taken each day
 
 ```r
-library(ggplot2)
-data_mean_day <- aggregate(steps ~ date, data = data, FUN = mean, na.rm = TRUE)
-g <- ggplot(data_mean_day, aes(date, steps))
-g + geom_bar(stat = "identity") + ggtitle("Mean Number of Steps Taken Each Day")
+mean(data2$steps)
 ```
 
-![](PA1_template_files/figure-html/meanstepsday-1.png)<!-- -->
+```
+## [1] 10766.19
+```
 
 #### 2.2b Median number of steps taken each day
 
 ```r
-library(ggplot2)
-data_median_day <- aggregate(steps ~ date, data = data, FUN = median, na.rm = TRUE)
-g <- ggplot(data_median_day, aes(date, steps))
-g + geom_bar(stat = "identity") + ggtitle("Median Number of Steps Taken Each Day")
+median(data2$steps)
 ```
 
-![](PA1_template_files/figure-html/medianstepsday-1.png)<!-- -->
+```
+## [1] 10765
+```
 
 ## 3 What is the average daily activity pattern?
 #### 3.1 Time series plot of the average number of steps taken
@@ -235,40 +233,38 @@ str(data4)
 ```r
 library(ggplot2)
 new_data <- data4
-new_data_total_day <- aggregate(steps ~ date, data = new_data, FUN = mean, na.rm = TRUE)
-g <- ggplot(data2, aes(date, steps))
-g + geom_bar(stat = "identity") + ggtitle("Total Number of Steps Taken Each Day")
+new_data_total_day <- aggregate(steps ~ date, data = new_data, FUN = sum, na.rm = TRUE)
+g <- ggplot(new_data_total_day, aes(steps))
+g + geom_histogram(bins = 10) + ggtitle("Total Number of Steps Taken Each Day (Missing Data Imputed)")
 ```
 
 ![](PA1_template_files/figure-html/newtotalstepsday-1.png)<!-- -->
 
-#### 4.4b Histogram of the mean number of steps taken each day after missing values are imputed
+#### 4.4b Mean number of steps taken each day after missing values are imputed
 
 ```r
-library(ggplot2)
-new_data_mean_day <- aggregate(steps ~ date, data = new_data, FUN = mean, na.rm = TRUE)
-g <- ggplot(new_data_mean_day, aes(date, steps))
-g + geom_bar(stat = "identity") + ggtitle("Mean Number of Steps Taken Each Day (Missing Data Imputed)")
+mean(new_data_total_day$steps)
 ```
 
-![](PA1_template_files/figure-html/newmeanstepsday-1.png)<!-- -->
+```
+## [1] 10766.19
+```
 
-#### 4.4c Histogram of the median number of steps taken each day after missing values are imputed
+#### 4.4c Median number of steps taken each day after missing values are imputed
 
 ```r
-library(ggplot2)
-new_data_median_day <- aggregate(steps ~ date, data = new_data, FUN = median, na.rm = TRUE)
-g <- ggplot(new_data_median_day, aes(date, steps))
-g + geom_bar(stat = "identity") + ggtitle("Median Number of Steps Taken Each Day (Missing Data Imputed)")
+median(new_data_total_day$steps)
 ```
 
-![](PA1_template_files/figure-html/newmedianstepsday-1.png)<!-- -->
+```
+## [1] 10766.19
+```
 
-Do these values differ from the estimates from the first part of the assignment? 
-Mean and median dont differ from the first part of the assignment. Only difference is more days of data in the plot. Averages and medians are not effected by this.
+##### Do these values differ from the estimates from the first part of the assignment? 
+The mean value is the same, the median has increased slighly and is equal to the average because of the 8 days that were added with the average.
 
-What is the impact of imputing missing data on the estimates of the total daily number of steps?
-The total number of daily steps has increased, but because whole days of data were missing the difference is that there are more days with data in the graphs. Daily totals are not affected. 
+##### What is the impact of imputing missing data on the estimates of the total daily number of steps?
+The frequency of the average number has increased by 8.
 
 ## 5 Are there differences in activity patterns between weekdays and weekends?
 #### 5.1 Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
